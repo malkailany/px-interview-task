@@ -9,8 +9,10 @@ import 'react-toastify/dist/ReactToastify.css'
 export function Note () {
   const auth = useAppSelector(selectAuth)
   if (auth.status !== LoginStatus.LOGGED_IN) return null
-
-  const {apiToken, user: { id: userId } } = auth
+  const {
+    apiToken,
+    user: { id: userId }
+  } = auth
 
   const handleSave = e => {
     toast.dismiss()
@@ -37,12 +39,27 @@ export function Note () {
 
   return (
     <div>
-      <NoteField userNote={auth.user.note} callback={debounce(e => handleSave(e))} />
+      <NoteField
+        userNote={auth.user.note}
+        callback={debounce(e => handleSave(e))}
+      />
       <ToastContainer limit={1} />
     </div>
   )
 }
 
-function NoteField ({ userNote = 'Default Note', callback }) {
-  return <textarea defaultValue={userNote} onChange={callback}></textarea>
+function NoteField ({ userNote, callback }) {
+  return (
+    <>
+      <textarea
+        defaultValue={
+          userNote ?? localStorage.getItem('TempNote') ?? 'Default value'
+        }
+        onChange={callback}
+      ></textarea>
+      {!userNote && localStorage.getItem('TempNote') ? (
+        <p>Saved from last draft</p>
+      ) : null}
+    </>
+  )
 }
