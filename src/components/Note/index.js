@@ -15,9 +15,9 @@ export function Note () {
   } = auth
 
   const handleSave = e => {
-    toast.dismiss()
-    const note = e.target.value
-    localStorage.setItem('TempNote', note)
+    toast.dismiss() //dismiss all active toast 
+    const note = e.target.value 
+    localStorage.setItem('TempNote', note) //save the note in localstorage
 
     fetchAPI(`/users/${userId}`, {
       method: 'PUT',
@@ -41,8 +41,9 @@ export function Note () {
     <div>
       <NoteField
         userNote={auth.user.note}
-        callback={debounce(e => handleSave(e), 500)}
+        callback={debounce(e => handleSave(e), 500)} // debounce the handle save function with 500ms delay on key releases
       />
+      {/* for notifications  */}
       <ToastContainer limit={1} />
     </div>
   )
@@ -53,11 +54,11 @@ function NoteField ({ userNote, callback }) {
     <>
       <textarea
         defaultValue={
-          userNote ?? localStorage.getItem('TempNote') ?? 'Default value'
+          userNote ?? localStorage.getItem('TempNote') ?? 'Write a new note!' // in order check if it exists, if usernote doesnt, then check storage and fall back on default
         }
-        onChange={callback}
+        onChange={callback} //callback when entering values
       ></textarea>
-      {/** If the user has not got a note */}
+      {/** If the user has not got a note from the api, i.e. failure, it will grab from the localstorage*/}
       {!userNote && localStorage.getItem('TempNote') ? (
         <p>Saved from last draft</p>
       ) : null}
