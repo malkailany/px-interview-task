@@ -41,7 +41,7 @@ export function Note () {
     <div>
       <NoteField
         userNote={auth.user.note}
-        callback={debounce(e => handleSave(e))}
+        callback={debounce(e => handleSave(e), 500)}
       />
       <ToastContainer limit={1} />
     </div>
@@ -57,6 +57,7 @@ function NoteField ({ userNote, callback }) {
         }
         onChange={callback}
       ></textarea>
+      {/** If the user has not got a note */}
       {!userNote && localStorage.getItem('TempNote') ? (
         <p>Saved from last draft</p>
       ) : null}
